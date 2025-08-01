@@ -1,13 +1,23 @@
 services:
-  app:
+  remotion-render:
     build: .
-    image: node-docker-template:1.0.0
+    container_name: remotion-render
     volumes:
-      - ${PWD}:/usr/src/app
-      - /usr/src/app/node_modules
-    env_file:
-      - .env
+      - ./out:/usr/src/app/out
     environment:
       - NODE_ENV=production
-      - PORT=${PORT:-3000}
-      - APP_NAME=${APP_NAME:-Docker Template} 
+    command: ["node", "render.mjs"]
+  
+  remotion-dev:
+    build: .
+    container_name: remotion-dev
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./out:/usr/src/app/out
+      - ./package.json:/usr/src/app/package.json
+      - ./tsconfig.json:/usr/src/app/tsconfig.json
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: ["npm", "run", "dev"] 
