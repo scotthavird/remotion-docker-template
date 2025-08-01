@@ -88,9 +88,12 @@ Output: `./out/HelloWorld.mp4` (1920x1080, 30fps, 15 seconds)
 
 ### 📺 Preview Video
 
-[![Hello World Video](HelloWorld.mp4)](HelloWorld.mp4)
+<video width="100%" controls>
+  <source src="HelloWorld.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
-*Click the video above to view the generated "Hello World" animation*
+*The generated "Hello World" animation (15-second video)*
 
 ## 🎨 Visual Editing
 

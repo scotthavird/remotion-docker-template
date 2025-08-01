@@ -78,7 +78,7 @@ export const HelloWorldComposition: React.FC<HelloWorldCompositionProps> = ({
       <AbsoluteFill style={{ opacity: contentOpacity }}>
         <ContentSection
           delay={0} // Relative to when this section becomes visible
-          duration={2.5}
+          duration={5.5}
           headerText={contentHeader}
           headerDelay={0.2}
         />
