@@ -86,6 +86,12 @@ The generated video includes:
 
 Output: `./out/HelloWorld.mp4` (1920x1080, 30fps, 15 seconds)
 
+### 📺 Preview Video
+
+[![Hello World Video](HelloWorld.mp4)](HelloWorld.mp4)
+
+*Click the video above to view the generated "Hello World" animation*
+
 ## 🎨 Visual Editing
 
 This template supports [Remotion's visual editing](https://www.remotion.dev/docs/visual-editing) with Zod schemas:

@@ -1,4 +1,5 @@
 import React from 'react';
+import { colors } from '../../theme/colors';
 import { AnimatedCircle } from '../atoms/AnimatedCircle';
 import { AnimatedText } from '../atoms/AnimatedText';
 
@@ -32,8 +33,8 @@ export const IntroSection: React.FC<IntroSectionProps> = ({
       <AnimatedText 
         text={title} 
         delay={titleDelay}
-        fontSize={80}
-        color="#ffffff"
+        fontSize={84}
+        color={colors.text.inverse}
       />
       
       {subtitle && (
@@ -41,17 +42,17 @@ export const IntroSection: React.FC<IntroSectionProps> = ({
           <AnimatedText 
             text={subtitle} 
             delay={subtitleDelay}
-            fontSize={40}
-            color="#cccccc"
+            fontSize={42}
+            color={colors.neutral[100]}
           />
         </div>
       )}
       
       <AnimatedCircle 
         delay={circleDelay}
-        duration={2}
-        size={120}
-        color="#4ecdc4"
+        duration={1.5}
+        size={100}
+        color={colors.secondary[500]}
         position="bottom"
       />
     </div>

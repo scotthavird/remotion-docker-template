@@ -1,5 +1,6 @@
 import React from 'react';
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { colors } from '../../theme/colors';
 
 interface AnimatedCircleProps {
   size?: number;
@@ -11,7 +12,7 @@ interface AnimatedCircleProps {
 
 export const AnimatedCircle: React.FC<AnimatedCircleProps> = ({
   size = 100,
-  color = '#ff6b6b',
+  color = colors.secondary[500],
   delay = 0,
   duration = 2,
   position = 'bottom'
@@ -33,7 +34,7 @@ export const AnimatedCircle: React.FC<AnimatedCircleProps> = ({
   
   const opacity = interpolate(
     frame,
-    [animationStart, animationStart + 15, animationEnd - 15, animationEnd],
+    [animationStart, animationStart + 10, animationEnd - 10, animationEnd],
     [0, 1, 1, 0],
     {
       extrapolateLeft: 'clamp',
@@ -52,10 +53,11 @@ export const AnimatedCircle: React.FC<AnimatedCircleProps> = ({
         top: positionY,
         width: size,
         height: size,
-        backgroundColor: color,
+        background: colors.gradients.secondary,
         borderRadius: '50%',
         transform: `translateX(-50%) scale(${scale})`,
         opacity,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
       }}
     />
   );

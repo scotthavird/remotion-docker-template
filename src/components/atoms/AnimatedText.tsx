@@ -1,5 +1,6 @@
 import React from 'react';
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { colors } from '../../theme/colors';
 
 interface AnimatedTextProps {
   text: string;
@@ -12,7 +13,7 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
   text,
   delay = 0,
   fontSize = 60,
-  color = '#ffffff'
+  color = colors.text.inverse
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -30,7 +31,7 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
   
   const opacity = interpolate(
     frame - animationStart,
-    [0, 30],
+    [0, 20],
     [0, 1],
     {
       extrapolateLeft: 'clamp',
@@ -44,10 +45,11 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
         fontSize,
         color,
         fontWeight: 'bold',
-        fontFamily: 'Arial, sans-serif',
+        fontFamily: '"Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif',
         transform: `scale(${scale})`,
         opacity,
         textAlign: 'center',
+        textShadow: '0 2px 4px rgba(0,0,0,0.1)',
       }}
     >
       {text}

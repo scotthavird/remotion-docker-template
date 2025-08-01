@@ -1,5 +1,6 @@
 import React from 'react';
 import { interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
+import { colors } from '../../theme/colors';
 
 interface ScrollingPageProps {
   delay?: number;
@@ -9,10 +10,10 @@ interface ScrollingPageProps {
 }
 
 export const ScrollingPage: React.FC<ScrollingPageProps> = ({
-  delay = 3,
-  duration = 3,
-  backgroundColor = '#f0f0f0',
-  textColor = '#333'
+  delay = 0,
+  duration = 2.5,
+  backgroundColor = colors.background.primary,
+  textColor = colors.text.primary
 }) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
@@ -22,7 +23,7 @@ export const ScrollingPage: React.FC<ScrollingPageProps> = ({
   
   const opacity = interpolate(
     frame,
-    [animationStart, animationStart + 15, animationEnd - 15, animationEnd],
+    [animationStart, animationStart + 10, animationEnd - 10, animationEnd],
     [0, 1, 1, 0],
     {
       extrapolateLeft: 'clamp',
@@ -33,7 +34,7 @@ export const ScrollingPage: React.FC<ScrollingPageProps> = ({
   const scrollY = interpolate(
     frame - animationStart,
     [0, duration * fps],
-    [0, -200],
+    [0, -150],
     {
       extrapolateLeft: 'clamp',
       extrapolateRight: 'clamp',
@@ -41,28 +42,29 @@ export const ScrollingPage: React.FC<ScrollingPageProps> = ({
   );
   
   const content = [
-    'Welcome to Remotion',
     'Build videos programmatically',
     'Using React components',
     'With powerful animations',
     'Deploy with Docker',
-    'Scale infinitely'
+    'Scale infinitely',
+    'Perfect for automation'
   ];
   
   return (
     <div
       style={{
         position: 'absolute',
-        width: width * 0.8,
-        height: height * 0.8,
-        left: width * 0.1,
-        top: height * 0.1,
+        width: width * 0.7,
+        height: height * 0.6,
+        left: width * 0.15,
+        top: height * 0.2,
         backgroundColor,
-        borderRadius: 20,
+        borderRadius: 24,
         padding: 40,
         opacity,
         overflow: 'hidden',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+        boxShadow: '0 20px 64px rgba(0,0,0,0.1)',
+        border: `2px solid ${colors.neutral[200]}`,
       }}
     >
       <div
@@ -75,11 +77,12 @@ export const ScrollingPage: React.FC<ScrollingPageProps> = ({
           <div
             key={index}
             style={{
-              fontSize: 32,
+              fontSize: 28,
               color: textColor,
-              marginBottom: 30,
-              fontFamily: 'Arial, sans-serif',
+              marginBottom: 24,
+              fontFamily: '"Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif',
               lineHeight: 1.4,
+              fontWeight: 500,
             }}
           >
             {text}

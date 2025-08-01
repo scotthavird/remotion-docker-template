@@ -1,4 +1,5 @@
 import React from 'react';
+import { colors } from '../../theme/colors';
 import { AnimatedCircle } from '../atoms/AnimatedCircle';
 import { AnimatedText } from '../atoms/AnimatedText';
 
@@ -10,8 +11,8 @@ interface OutroSectionProps {
 
 export const OutroSection: React.FC<OutroSectionProps> = ({
   message = "Thank You!",
-  delay = 8,
-  circleDelay = 8.5
+  delay = 0.3,
+  circleDelay = 0.6
 }) => {
   return (
     <div
@@ -23,21 +24,21 @@ export const OutroSection: React.FC<OutroSectionProps> = ({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#2c3e50',
+        background: colors.gradients.primary,
       }}
     >
       <AnimatedText 
         text={message}
         delay={delay}
-        fontSize={70}
-        color="#ecf0f1"
+        fontSize={72}
+        color={colors.text.inverse}
       />
       
       <AnimatedCircle 
         delay={circleDelay}
-        duration={3}
+        duration={1.5}
         size={80}
-        color="#e74c3c"
+        color={colors.secondary[500]}
         position="center"
       />
     </div>
