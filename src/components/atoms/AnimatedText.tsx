@@ -1,0 +1,56 @@
+import React from 'react';
+import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+
+interface AnimatedTextProps {
+  text: string;
+  delay?: number;
+  fontSize?: number;
+  color?: string;
+}
+
+export const AnimatedText: React.FC<AnimatedTextProps> = ({
+  text,
+  delay = 0,
+  fontSize = 60,
+  color = '#ffffff'
+}) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  
+  const animationStart = delay * fps;
+  const scale = spring({
+    frame: frame - animationStart,
+    fps,
+    config: {
+      damping: 100,
+      stiffness: 200,
+      mass: 0.5,
+    },
+  });
+  
+  const opacity = interpolate(
+    frame - animationStart,
+    [0, 30],
+    [0, 1],
+    {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    }
+  );
+  
+  return (
+    <div
+      style={{
+        fontSize,
+        color,
+        fontWeight: 'bold',
+        fontFamily: 'Arial, sans-serif',
+        transform: `scale(${scale})`,
+        opacity,
+        textAlign: 'center',
+      }}
+    >
+      {text}
+    </div>
+  );
+}; 
