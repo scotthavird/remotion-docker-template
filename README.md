@@ -2,6 +2,8 @@
 
 A dockerized Remotion template for creating animated videos. Generates a 15-second "Hello World" animation with atomic design components.
 
+📖 **[Read the complete developer guide](https://www.scotthavird.com/blog/remotion-docker-template)** - Learn about building scalable video generation pipelines with Remotion, Docker, and GitHub Actions.
+
 ## Quick Start
 
 ### Prerequisites
