@@ -76,6 +76,79 @@ pnpm dev
 pnpm render
 ```
 
+## 🐳 GitHub Container Registry & Actions
+
+This template includes automated workflows for building Docker images and rendering videos in GitHub Actions.
+
+### Automated Workflows
+
+#### 1. Build and Publish Docker Image
+- **Trigger**: Push to main branch or create tags
+- **Action**: Builds Docker image and publishes to GitHub Container Registry
+- **Location**: `ghcr.io/{username}/{repository}`
+
+#### 2. Render Video in GitHub Actions
+- **Trigger**: Manual workflow dispatch or daily schedule
+- **Action**: Runs Docker container and stores video as artifact
+- **Output**: Video files available as GitHub artifacts and releases
+
+### Using the Workflows
+
+#### Manual Video Rendering
+1. Go to **Actions** tab in your repository
+2. Select **"Render Video"** workflow
+3. Click **"Run workflow"**
+4. Customize video parameters:
+   - Title
+   - Subtitle  
+   - Content Header
+   - Outro Message
+5. Click **"Run workflow"**
+
+#### Automated Daily Rendering
+The workflow runs daily at 2 AM UTC with default parameters.
+
+### Local Scripts
+
+#### Build and Push Docker Image
+```bash
+# Build and optionally push to GitHub Container Registry
+./scripts/build-and-push.sh [tag]
+
+# Example
+./scripts/build-and-push.sh v1.0.0
+```
+
+#### Test Container Locally
+```bash
+# Test with default parameters
+./scripts/test-local.sh
+
+# Test with custom parameters
+./scripts/test-local.sh "Custom Title" "Custom Subtitle" "Custom Header" "Custom Outro"
+```
+
+### GitHub Container Registry Setup
+
+1. **Enable Container Registry**:
+   - Go to repository Settings → Packages
+   - Ensure "Inherit access from source repository" is enabled
+
+2. **Create Personal Access Token** (for local pushing):
+   - Go to GitHub Settings → Developer settings → Personal access tokens
+   - Create token with `write:packages` permission
+   - Use token as password when prompted by Docker login
+
+3. **Repository Permissions**:
+   - Ensure GitHub Actions have `packages: write` permission
+   - This is automatically configured in the workflow files
+
+### Video Output Storage
+
+- **GitHub Artifacts**: Videos stored for 30 days
+- **GitHub Releases**: Videos attached to releases for permanent storage
+- **Download Links**: Direct download URLs available in releases
+
 ## 📹 Video Output
 
 The generated video includes:

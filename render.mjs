@@ -22,12 +22,15 @@ const bundled = await bundle({
 
 console.log('Bundle created successfully');
 
+// Get input props from environment variables or use defaults
 const inputProps = {
-  title: 'Hello World',
-  subtitle: 'Welcome to Remotion',
-  contentHeader: 'Discover More',
-  outroMessage: 'Thank You!'
+  title: process.env.TITLE || 'Hello World',
+  subtitle: process.env.SUBTITLE || 'Welcome to Remotion',
+  contentHeader: process.env.CONTENT_HEADER || 'Discover More',
+  outroMessage: process.env.OUTRO_MESSAGE || 'Thank You!'
 };
+
+console.log('Input props:', inputProps);
 
 console.log('Selecting composition...');
 
