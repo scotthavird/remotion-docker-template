@@ -1,318 +1,67 @@
 # Remotion Docker Template
 
-A dockerized Remotion template built with atomic design principles for scalable video generation. This template creates a 15-second "Hello World" animation and provides a foundation for building complex video compositions.
+A dockerized Remotion template for creating animated videos. Generates a 15-second "Hello World" animation with atomic design components.
 
-## 🏗️ Architecture
-
-This project follows **Atomic Design** principles to ensure LLM-friendly component architecture:
-
-### Atomic Design Structure
-
-```
-src/
-├── components/
-│   ├── atoms/           # Basic building blocks
-│   │   ├── AnimatedText.tsx
-│   │   ├── AnimatedCircle.tsx
-│   │   └── ScrollingPage.tsx
-│   ├── molecules/       # Groups of atoms
-│   │   ├── IntroSection.tsx
-│   │   ├── ContentSection.tsx
-│   │   └── OutroSection.tsx
-│   └── organisms/       # Complex UI components
-│       └── HelloWorldComposition.tsx
-└── index.tsx           # Main composition registration
-```
-
-### Component Hierarchy
-
-- **Atoms**: `AnimatedText`, `AnimatedCircle`, `ScrollingPage`
-- **Molecules**: `IntroSection`, `ContentSection`, `OutroSection`  
-- **Organisms**: `HelloWorldComposition`
-
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
-
 - Docker & Docker Compose
-- Node.js 18+ (for local development)
-- pnpm (package manager)
 
-### 1. Clone and Setup
-
+### 1. Clone Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/scotthavird/remotion-docker-template
 cd remotion-docker-template
 ```
 
-### 2. Render Video with Docker
-
+### 2. Development Mode
 ```bash
-# Build and render video
-docker-compose up remotion-render
-
-# Video will be output to ./out/HelloWorld.mp4
-```
-
-### 3. Development with Remotion Studio
-
-```bash
-# Start development server with hot reload
+# Start Remotion Studio with hot reload
 docker-compose up remotion-dev
 
-# Open http://localhost:3000 for Remotion Studio
+# Open http://localhost:3000
 ```
 
-### 4. Local Development (Alternative)
-
+### 3. Render Video
 ```bash
-# Install dependencies
-pnpm install
+# Generate video
+docker-compose up remotion-render
 
-# Start Remotion Studio
-pnpm dev
-
-# Or render directly
-pnpm render
+# Output: ./out/HelloWorld.mp4
 ```
 
-## 🐳 GitHub Container Registry & Actions
+### Local Development (Alternative)
+```bash
+pnpm install
+pnpm dev    # Start studio
+pnpm render # Render video
+```
 
-This template includes automated workflows for building Docker images and rendering videos in GitHub Actions.
+## GitHub Actions & Container Registry
 
 ### Automated Workflows
-
-#### 1. Build and Publish Docker Image
-- **Trigger**: Push to main branch or create tags
-- **Action**: Builds Docker image and publishes to GitHub Container Registry
-- **Location**: `ghcr.io/{username}/{repository}`
-
-#### 2. Render Video in GitHub Actions
-- **Trigger**: Manual workflow dispatch or daily schedule
-- **Action**: Runs Docker container and stores video as artifact
-- **Output**: Video files available as GitHub artifacts and releases
-
-### Using the Workflows
-
-#### Manual Video Rendering
-1. Go to **Actions** tab in your repository
-2. Select **"Render Video"** workflow
-3. Click **"Run workflow"**
-4. Customize video parameters:
-   - Title
-   - Subtitle  
-   - Content Header
-   - Outro Message
-5. Click **"Run workflow"**
-
-#### Automated Daily Rendering
-The workflow runs daily at 2 AM UTC with default parameters.
-
-### Local Scripts
-
-#### Build and Push Docker Image
-```bash
-# Build and optionally push to GitHub Container Registry
-./scripts/build-and-push.sh [tag]
-
-# Example
-./scripts/build-and-push.sh v1.0.0
-```
-
-#### Test Container Locally
-```bash
-# Test with default parameters
-./scripts/test-local.sh
-
-# Test with custom parameters
-./scripts/test-local.sh "Custom Title" "Custom Subtitle" "Custom Header" "Custom Outro"
-```
-
-### GitHub Container Registry Setup
-
-1. **Enable Container Registry**:
-   - Go to repository Settings → Packages
-   - Ensure "Inherit access from source repository" is enabled
-
-2. **Create Personal Access Token** (for local pushing):
-   - Go to GitHub Settings → Developer settings → Personal access tokens
-   - Create token with `write:packages` permission
-   - Use token as password when prompted by Docker login
-
-3. **Repository Permissions**:
-   - Ensure GitHub Actions have `packages: write` permission
-   - This is automatically configured in the workflow files
-
-### Video Output Storage
-
-- **GitHub Artifacts**: Videos stored for 30 days
-- **GitHub Releases**: Videos attached to releases for permanent storage
-- **Download Links**: Direct download URLs available in releases
-
-## 📹 Video Output
-
-The generated video includes:
-
-- **0-3s**: Intro with animated "Hello World" text and circle
-- **3-8s**: Scrolling page content with "Discover More" header
-- **8-15s**: Outro with "Thank You!" message and final animation
-
-Output: `./out/HelloWorld.mp4` (1920x1080, 30fps, 15 seconds)
-
-### 📺 Preview Video
-
-<video width="100%" controls>
-  <source src="HelloWorld.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-*The generated "Hello World" animation (15-second video)*
-
-## 🎨 Visual Editing
-
-This template supports [Remotion's visual editing](https://www.remotion.dev/docs/visual-editing) with Zod schemas:
-
-1. Start the studio: `pnpm dev` or `docker-compose up remotion-dev`
-2. Open the props panel (Cmd/Ctrl + J)
-3. Edit text values in real-time
-4. Use the 💾 button to save changes back to code
-
-### Editable Props
-
-- `title`: Main heading text
-- `subtitle`: Secondary text  
-- `contentHeader`: Content section header
-- `outroMessage`: Final message
-
-## 🏗️ Extending the Template
-
-### Adding New Atomic Components
-
-1. **Create Atom** in `src/components/atoms/`
-2. **Compose into Molecule** in `src/components/molecules/`
-3. **Integrate into Organism** in `src/components/organisms/`
-4. **Register in Main Composition** in `src/index.tsx`
-
-### Example: Adding a New Component
-
-```tsx
-// src/components/atoms/NewAtom.tsx
-import React from 'react';
-import { useCurrentFrame } from 'remotion';
-
-interface NewAtomProps {
-  duration?: number;
-  delay?: number;
-}
-
-export const NewAtom: React.FC<NewAtomProps> = ({ 
-  duration = 2, 
-  delay = 0 
-}) => {
-  const frame = useCurrentFrame();
-  // Add animation logic
-  return <div>New Component</div>;
-};
-```
-
-### Future Template Ideas
-
-- **Product Demos**: Showcase features with animations
-- **Social Media Content**: Instagram/TikTok optimized formats
-- **Educational Videos**: Step-by-step tutorials
-- **Marketing Clips**: Brand introductions and promotions
-- **Data Visualizations**: Animated charts and graphs
-
-## 🐳 Docker Configuration
-
-### Services
-
-- **remotion-render**: Renders video and exits
-- **remotion-dev**: Development server with hot reload
-
-### Output Volume
-
-Videos are output to `./out/` directory which is mounted as a Docker volume for easy access.
-
-### Resource Allocation
-
-For better performance, allocate more CPU/memory to Docker:
-
-```bash
-# Run with specific CPU allocation
-docker run --cpus=4 --cpuset-cpus=0-3 remotion-docker-template
-```
-
-## 🛠️ Monorepo Support
-
-This template includes Turbo for monorepo management:
-
-```json
-// turbo.json supports these commands:
-{
-  "build": "Build compositions",
-  "dev": "Development server", 
-  "render": "Render videos",
-  "studio": "Remotion Studio"
-}
-```
-
-Perfect for scaling to multiple video templates in a single repository.
-
-## 📋 Scripts
-
-- `pnpm dev` - Start Remotion Studio
-- `pnpm build` - Bundle composition
-- `pnpm render` - Render video locally
-- `pnpm render:video` - Direct CLI render
-
-## 🔧 Configuration
-
-### Remotion Config (`remotion.config.ts`)
-
-- Video format: JPEG images
-- Overwrite output: Enabled
-- Webpack customizations available
-
-### TypeScript Config (`tsconfig.json`)
-
-- ES2022 target
-- React JSX transform
-- Strict mode enabled
-
-## 📦 Dependencies
-
-### Core
-- **remotion**: Video generation framework
-- **react**: Component framework
-- **zod**: Schema validation for props
-
-### Development  
-- **typescript**: Type safety
-- **turbo**: Monorepo tools
-
-## 🚀 Deployment
-
-This template is designed for containerized deployment:
-
-1. **CI/CD Integration**: Trigger renders on content changes
-2. **Serverless**: Deploy on cloud functions for on-demand rendering
-3. **Batch Processing**: Process multiple videos in parallel
-4. **API Integration**: Accept props via REST/GraphQL APIs
-
-## 🤝 LLM Integration
-
-The atomic design pattern makes this template LLM-friendly:
-
-- **Clear Component Boundaries**: Easy to understand and modify
-- **Predictable Structure**: Atoms → Molecules → Organisms
-- **Type Safety**: TypeScript interfaces for all props
-- **Modular Design**: Components can be combined in countless ways
-
-## 📄 License
-
-MIT License - feel free to use for any project!
-
----
+1. **Build & Publish**: Pushes Docker image to `ghcr.io/{username}/{repository}` on main branch
+2. **Render Video**: Manual or daily scheduled video generation
+
+### Usage
+1. Go to **Actions** tab → **"Render Video"** 
+2. Click **"Run workflow"** 
+3. Customize parameters (title, subtitle, etc.)
+4. Download from artifacts or releases
+
+### Container Registry Setup
+- Enable in Settings → Packages
+- Create PAT with `write:packages` permission for local pushing
+
+## What's Included
+
+- **Components**: Atomic design (atoms → molecules → organisms)  
+- **Docker**: Development and render containers
+- **GitHub Actions**: Automated building and rendering
+- **Visual Editing**: Real-time prop editing in Remotion Studio
+- **TypeScript**: Full type safety
+
+## Scripts
+- `./scripts/build-and-push.sh` - Build/push Docker image
+- `./scripts/test-local.sh` - Test container locally
 
 **Built with [Remotion](https://remotion.dev) 🎬**
