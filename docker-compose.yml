@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    image: node-docker-template:1.0.0
+    volumes:
+      - ${PWD}:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT:-3000}
+      - APP_NAME=${APP_NAME:-Docker Template} 
