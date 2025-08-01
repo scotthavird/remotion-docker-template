@@ -1,16 +1,10 @@
 import React from 'react';
 import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
-import { colors } from '../../theme/colors';
-import { ContentSection } from '../molecules/ContentSection';
-import { IntroSection } from '../molecules/IntroSection';
-import { OutroSection } from '../molecules/OutroSection';
-
-interface HelloWorldCompositionProps {
-  title?: string;
-  subtitle?: string;
-  contentHeader?: string;
-  outroMessage?: string;
-}
+import { colors } from '../../../theme/colors';
+import { ContentSection } from '../../molecules/ContentSection';
+import { IntroSection } from '../../molecules/IntroSection';
+import { OutroSection } from '../../molecules/OutroSection';
+import { HelloWorldCompositionProps } from './types';
 
 export const HelloWorldComposition: React.FC<HelloWorldCompositionProps> = ({
   title = "Hello World",

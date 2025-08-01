@@ -1,13 +1,7 @@
 import React from 'react';
 import { interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
-import { colors } from '../../theme/colors';
-
-interface ScrollingPageProps {
-  delay?: number;
-  duration?: number;
-  backgroundColor?: string;
-  textColor?: string;
-}
+import { colors } from '../../../theme/colors';
+import { ScrollingPageProps } from './types';
 
 export const ScrollingPage: React.FC<ScrollingPageProps> = ({
   delay = 0,

@@ -1,14 +1,7 @@
 import React from 'react';
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { colors } from '../../theme/colors';
-
-interface AnimatedCircleProps {
-  size?: number;
-  color?: string;
-  delay?: number;
-  duration?: number;
-  position?: 'bottom' | 'center' | 'top';
-}
+import { colors } from '../../../theme/colors';
+import { AnimatedCircleProps } from './types';
 
 export const AnimatedCircle: React.FC<AnimatedCircleProps> = ({
   size = 100,

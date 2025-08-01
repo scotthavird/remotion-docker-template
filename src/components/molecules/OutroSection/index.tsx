@@ -1,13 +1,8 @@
 import React from 'react';
-import { colors } from '../../theme/colors';
-import { AnimatedCircle } from '../atoms/AnimatedCircle';
-import { AnimatedText } from '../atoms/AnimatedText';
-
-interface OutroSectionProps {
-  message?: string;
-  delay?: number;
-  circleDelay?: number;
-}
+import { colors } from '../../../theme/colors';
+import { AnimatedCircle } from '../../atoms/AnimatedCircle';
+import { AnimatedText } from '../../atoms/AnimatedText';
+import { OutroSectionProps } from './types';
 
 export const OutroSection: React.FC<OutroSectionProps> = ({
   message = "Thank You!",

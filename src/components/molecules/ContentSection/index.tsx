@@ -1,14 +1,8 @@
 import React from 'react';
-import { colors } from '../../theme/colors';
-import { AnimatedText } from '../atoms/AnimatedText';
-import { ScrollingPage } from '../atoms/ScrollingPage';
-
-interface ContentSectionProps {
-  delay?: number;
-  duration?: number;
-  headerText?: string;
-  headerDelay?: number;
-}
+import { colors } from '../../../theme/colors';
+import { AnimatedText } from '../../atoms/AnimatedText';
+import { ScrollingPage } from '../../atoms/ScrollingPage';
+import { ContentSectionProps } from './types';
 
 export const ContentSection: React.FC<ContentSectionProps> = ({
   delay = 0,

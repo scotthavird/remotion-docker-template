@@ -1,13 +1,7 @@
 import React from 'react';
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { colors } from '../../theme/colors';
-
-interface AnimatedTextProps {
-  text: string;
-  delay?: number;
-  fontSize?: number;
-  color?: string;
-}
+import { colors } from '../../../theme/colors';
+import { AnimatedTextProps } from './types';
 
 export const AnimatedText: React.FC<AnimatedTextProps> = ({
   text,

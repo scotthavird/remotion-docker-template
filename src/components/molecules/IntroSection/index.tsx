@@ -1,15 +1,8 @@
 import React from 'react';
-import { colors } from '../../theme/colors';
-import { AnimatedCircle } from '../atoms/AnimatedCircle';
-import { AnimatedText } from '../atoms/AnimatedText';
-
-interface IntroSectionProps {
-  title: string;
-  subtitle?: string;
-  titleDelay?: number;
-  subtitleDelay?: number;
-  circleDelay?: number;
-}
+import { colors } from '../../../theme/colors';
+import { AnimatedCircle } from '../../atoms/AnimatedCircle';
+import { AnimatedText } from '../../atoms/AnimatedText';
+import { IntroSectionProps } from './types';
 
 export const IntroSection: React.FC<IntroSectionProps> = ({
   title,
