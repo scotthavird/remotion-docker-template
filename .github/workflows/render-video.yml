@@ -23,9 +23,7 @@ on:
         required: false
         default: 'Thank You!'
         type: string
-  schedule:
-    # Run daily at 2 AM UTC
-    - cron: '0 2 * * *'
+
 
 env:
   REGISTRY: ghcr.io
