@@ -82,4 +82,8 @@ This project includes Cursor rules to enhance AI-assisted development:
 
 These rules help Cursor understand the project structure, coding patterns, and development workflows for better AI assistance.
 
+## License
+
+Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+
 **Built with [Remotion](https://remotion.dev) 🎬**
