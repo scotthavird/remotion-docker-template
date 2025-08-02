@@ -1,3 +1,6 @@
+---
+globs: src/components/**/*.tsx,src/components/**/*.ts
+---
 # Remotion Component Development Patterns
 
 ## Component Structure
@@ -50,7 +53,3 @@ jest.mock('remotion', () => ({
 - [src/components/atoms/AnimatedText/index.tsx](mdc:src/components/atoms/AnimatedText/index.tsx) - Text animation example
 - [src/components/atoms/AnimatedCircle/index.tsx](mdc:src/components/atoms/AnimatedCircle/index.tsx) - Circle animation example
 - [src/components/molecules/IntroSection/index.tsx](mdc:src/components/molecules/IntroSection/index.tsx) - Composite component example
-description:
-globs:
-alwaysApply: false
----

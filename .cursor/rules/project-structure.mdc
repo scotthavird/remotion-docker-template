@@ -1,3 +1,7 @@
+---
+description:
+alwaysApply: true
+---
 # Remotion Docker Template Project Structure
 
 This is a Remotion-based video generation template with Docker containerization and GitHub Actions automation.
@@ -33,7 +37,3 @@ This is a Remotion-based video generation template with Docker containerization 
 2. Video rendering: `docker-compose up remotion-render`
 3. GitHub Actions: Manual trigger via Actions tab
 4. Container registry: `ghcr.io/{username}/{repository}`
-description:
-globs:
-alwaysApply: false
----

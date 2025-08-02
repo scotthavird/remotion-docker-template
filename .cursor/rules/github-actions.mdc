@@ -1,3 +1,7 @@
+---
+description:
+globs: .github/workflows/*.yml
+---
 # GitHub Actions Workflow Development
 
 ## Workflow Structure
@@ -51,7 +55,3 @@ Video parameters are passed as environment variables:
 - **Artifact not found**: Ensure `github-token` and `run-id` are specified
 - **Permission denied**: Check workflow permissions (`contents: write`, `actions: read`)
 - **Docker image not found**: Verify build workflow completed successfully
-description:
-globs:
-alwaysApply: false
----

@@ -1,3 +1,6 @@
+---
+globs: Dockerfile,docker-compose.yml,render.mjs
+---
 # Docker Development Patterns
 
 ## Container Structure
@@ -60,7 +63,3 @@ docker-compose up remotion-render
 # Test locally
 ./scripts/test-local.sh "Custom Title" "Custom Subtitle"
 ```
-description:
-globs:
-alwaysApply: false
----
