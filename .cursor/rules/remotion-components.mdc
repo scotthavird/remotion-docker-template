@@ -1,0 +1,56 @@
+# Remotion Component Development Patterns
+
+## Component Structure
+Each component follows this structure:
+- `index.tsx` - Main component implementation
+- `types.ts` - TypeScript interfaces and prop definitions
+- `README.md` - Component documentation
+- `ComponentName.test.tsx` - Unit tests
+
+## Atomic Design Hierarchy
+- **Atoms**: Basic building blocks (AnimatedText, AnimatedCircle, ScrollingPage)
+- **Molecules**: Composite components (IntroSection, ContentSection, OutroSection)
+- **Organisms**: Main compositions (HelloWorldComposition)
+
+## Remotion Hooks Usage
+Always import and use these Remotion hooks:
+```typescript
+import { useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
+```
+
+## Component Props Pattern
+Use Zod schemas for visual editing support:
+```typescript
+import { z } from 'zod';
+
+export const ComponentSchema = z.object({
+  title: z.string().default('Hello World'),
+  subtitle: z.string().default('Welcome to Remotion'),
+});
+```
+
+## Animation Patterns
+- Use `spring()` for smooth animations
+- Use `interpolate()` for frame-based animations
+- Use `useCurrentFrame()` for timing
+- Use `useVideoConfig()` for video dimensions
+
+## Testing
+Mock Remotion hooks in tests:
+```typescript
+jest.mock('remotion', () => ({
+  useCurrentFrame: () => 0,
+  useVideoConfig: () => ({ width: 1920, height: 1080, fps: 30 }),
+  interpolate: (value: number) => value,
+  spring: (value: number) => value,
+}));
+```
+
+## File References
+- [src/components/atoms/AnimatedText/index.tsx](mdc:src/components/atoms/AnimatedText/index.tsx) - Text animation example
+- [src/components/atoms/AnimatedCircle/index.tsx](mdc:src/components/atoms/AnimatedCircle/index.tsx) - Circle animation example
+- [src/components/molecules/IntroSection/index.tsx](mdc:src/components/molecules/IntroSection/index.tsx) - Composite component example
+description:
+globs:
+alwaysApply: false
+---

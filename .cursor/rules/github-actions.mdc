@@ -1,0 +1,57 @@
+# GitHub Actions Workflow Development
+
+## Workflow Structure
+Three main workflows work together:
+1. **Build & Publish**: Creates Docker images
+2. **Render Video**: Generates videos with parameters
+3. **Upload to Releases**: Creates permanent releases
+
+## Key Patterns
+
+### Docker Image Building
+- Uses `docker/build-push-action@v5` with caching
+- Publishes to GitHub Container Registry (`ghcr.io`)
+- Supports semantic versioning and branch tags
+
+### Video Rendering
+- Manual trigger with customizable parameters
+- Uses Docker container for consistent rendering
+- Uploads artifacts for temporary storage
+- Creates releases for permanent storage
+
+### Cross-Workflow Artifact Access
+When downloading artifacts from triggering workflows:
+```yaml
+- uses: actions/download-artifact@v4
+  with:
+    name: rendered-video
+    path: ./videos
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    run-id: ${{ github.event.workflow_run.id }}
+```
+
+### Environment Variables
+Video parameters are passed as environment variables:
+```yaml
+- name: Run video render container
+  run: |
+    docker run --rm \
+      -e TITLE="${{ github.event.inputs.title || 'Hello World' }}" \
+      -e SUBTITLE="${{ github.event.inputs.subtitle || 'Welcome to Remotion' }}" \
+      ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
+```
+
+## File References
+- [.github/workflows/build-and-publish.yml](mdc:.github/workflows/build-and-publish.yml) - Docker image workflow
+- [.github/workflows/render-video.yml](mdc:.github/workflows/render-video.yml) - Video rendering workflow
+- [.github/workflows/upload-to-releases.yml](mdc:.github/workflows/upload-to-releases.yml) - Release creation workflow
+- [docs/GITHUB_ACTIONS_SETUP.md](mdc:docs/GITHUB_ACTIONS_SETUP.md) - Complete setup guide
+
+## Common Issues
+- **Artifact not found**: Ensure `github-token` and `run-id` are specified
+- **Permission denied**: Check workflow permissions (`contents: write`, `actions: read`)
+- **Docker image not found**: Verify build workflow completed successfully
+description:
+globs:
+alwaysApply: false
+---

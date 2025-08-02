@@ -71,4 +71,15 @@ pnpm render # Render video
 - `./scripts/build-and-push.sh` - Build/push Docker image
 - `./scripts/test-local.sh` - Test container locally
 
+## Cursor Rules
+
+This project includes Cursor rules to enhance AI-assisted development:
+
+- **Project Structure** (`.cursor/rules/project-structure.mdc`) - Overview of the codebase architecture
+- **Remotion Components** (`.cursor/rules/remotion-components.mdc`) - Component development patterns and atomic design
+- **GitHub Actions** (`.cursor/rules/github-actions.mdc`) - Workflow development and automation patterns
+- **Docker Development** (`.cursor/rules/docker-development.mdc`) - Container development and deployment patterns
+
+These rules help Cursor understand the project structure, coding patterns, and development workflows for better AI assistance.
+
 **Built with [Remotion](https://remotion.dev) 🎬**

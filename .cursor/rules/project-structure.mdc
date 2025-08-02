@@ -1,0 +1,39 @@
+# Remotion Docker Template Project Structure
+
+This is a Remotion-based video generation template with Docker containerization and GitHub Actions automation.
+
+## Core Files
+- [package.json](mdc:package.json) - Project dependencies and scripts
+- [Dockerfile](mdc:Dockerfile) - Production container with Chrome dependencies
+- [docker-compose.yml](mdc:docker-compose.yml) - Development and render services
+- [render.mjs](mdc:render.mjs) - Video rendering script with environment variables
+
+## Remotion Configuration
+- [remotion.config.ts](mdc:remotion.config.ts) - Remotion webpack and video settings
+- [src/index.tsx](mdc:src/index.tsx) - Main composition registration with Zod schemas
+- [tsconfig.json](mdc:tsconfig.json) - TypeScript configuration
+
+## GitHub Actions Workflows
+- [.github/workflows/build-and-publish.yml](mdc:.github/workflows/build-and-publish.yml) - Docker image building and publishing
+- [.github/workflows/render-video.yml](mdc:.github/workflows/render-video.yml) - Manual video rendering with parameters
+- [.github/workflows/upload-to-releases.yml](mdc:.github/workflows/upload-to-releases.yml) - Automatic release creation
+
+## Component Architecture (Atomic Design)
+- [src/components/atoms/](mdc:src/components/atoms/) - Basic components (AnimatedText, AnimatedCircle, ScrollingPage)
+- [src/components/molecules/](mdc:src/components/molecules/) - Composite components (IntroSection, ContentSection, OutroSection)
+- [src/components/organisms/](mdc:src/components/organisms/) - Main composition (HelloWorldComposition)
+
+## Scripts and Documentation
+- [scripts/](mdc:scripts/) - Helper scripts for building, testing, and setup
+- [docs/GITHUB_ACTIONS_SETUP.md](mdc:docs/GITHUB_ACTIONS_SETUP.md) - Comprehensive GitHub Actions guide
+- [README.md](mdc:README.md) - Quick start and usage instructions
+
+## Development Workflow
+1. Local development: `docker-compose up remotion-dev`
+2. Video rendering: `docker-compose up remotion-render`
+3. GitHub Actions: Manual trigger via Actions tab
+4. Container registry: `ghcr.io/{username}/{repository}`
+description:
+globs:
+alwaysApply: false
+---
