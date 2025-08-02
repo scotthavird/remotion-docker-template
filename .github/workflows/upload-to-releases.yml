@@ -57,23 +57,8 @@ jobs:
       uses: actions/github-script@v7
       with:
         script: |
-          const { data: comments } = await github.rest.issues.listComments({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.event.workflow_run.id
-          });
-          
-          const comment = `✅ Video successfully uploaded to releases!
-          
-          📦 **Release**: [Video Render ${context.event.workflow_run.run_number}](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/video-${context.event.workflow_run.run_number})
-          
-          🎬 **Download**: Direct download links available in the release
-          
-          📁 **Files**: All MP4 files are now permanently stored in GitHub releases`;
-          
-          await github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.event.workflow_run.id,
-            body: comment
-          }); 
+          const workflowRun = context.payload.workflow_run;
+          console.log(`✅ Video successfully uploaded to releases!`);
+          console.log(`📦 Release: Video Render ${workflowRun.run_number}`);
+          console.log(`🎬 Download: https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/video-${workflowRun.run_number}`);
+          console.log(`📁 Files: All MP4 files are now permanently stored in GitHub releases`); 
