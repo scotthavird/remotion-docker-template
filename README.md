@@ -47,7 +47,7 @@ pnpm render # Render video
 
 ### Automated Workflows
 1. **Build & Publish**: Pushes Docker image to `ghcr.io/{username}/{repository}` on main branch
-2. **Render Video**: Manual or daily scheduled video generation
+2. **Render Video**: Manual video generation with customizable parameters
 
 ### Usage
 1. Go to **Actions** tab → **"Render Video"** 
