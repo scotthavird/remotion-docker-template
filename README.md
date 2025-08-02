@@ -40,6 +40,11 @@ pnpm render # Render video
 
 ## GitHub Actions & Container Registry
 
+### Quick Setup (2 minutes)
+1. **Enable Container Registry**: Settings → Packages → "Inherit access from source repository"
+2. **Push to main**: `git push origin main` (triggers first build)
+3. **Use Actions**: Go to Actions tab → "Render Video" → "Run workflow"
+
 ### Automated Workflows
 1. **Build & Publish**: Pushes Docker image to `ghcr.io/{username}/{repository}` on main branch
 2. **Render Video**: Manual or daily scheduled video generation
