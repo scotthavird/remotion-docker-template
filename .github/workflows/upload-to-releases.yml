@@ -20,6 +20,7 @@ jobs:
       with:
         name: rendered-video
         path: ./videos
+        run-id: ${{ github.event.workflow_run.id }}
 
     - name: List downloaded files
       run: |
