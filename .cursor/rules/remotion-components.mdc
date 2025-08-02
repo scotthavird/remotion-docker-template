@@ -1,4 +1,5 @@
 ---
+description: Remotion component development patterns, atomic design hierarchy, animation techniques, and testing strategies
 globs: src/components/**/*.tsx,src/components/**/*.ts
 ---
 # Remotion Component Development Patterns

@@ -1,5 +1,5 @@
 ---
-description:
+description: GitHub Actions workflow development patterns, cross-workflow artifact access, and common troubleshooting solutions
 globs: .github/workflows/*.yml
 ---
 # GitHub Actions Workflow Development

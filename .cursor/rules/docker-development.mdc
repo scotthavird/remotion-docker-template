@@ -1,4 +1,5 @@
 ---
+description: Docker container development patterns, Chrome dependencies for Remotion, security best practices, and common commands
 globs: Dockerfile,docker-compose.yml,render.mjs
 ---
 # Docker Development Patterns
