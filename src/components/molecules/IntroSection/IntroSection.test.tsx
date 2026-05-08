@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 import { IntroSection } from './index';
 
-// Mock Remotion hooks
 jest.mock('remotion', () => ({
   useCurrentFrame: () => 30,
   useVideoConfig: () => ({ fps: 30, width: 1920, height: 1080 }),
@@ -32,27 +31,26 @@ describe('IntroSection', () => {
     expect(queryByText('Welcome to Remotion')).not.toBeInTheDocument();
   });
 
-  it('applies correct container styles', () => {
+  it('applies layout classes on the container', () => {
     const { container } = render(<IntroSection title="Test" />);
     const mainDiv = container.firstChild as HTMLElement;
-    expect(mainDiv).toHaveStyle({
-      position: 'relative',
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-    });
+    expect(mainDiv).toHaveClass(
+      'relative',
+      'w-full',
+      'h-full',
+      'flex',
+      'flex-col',
+      'justify-center',
+      'items-center',
+    );
   });
 
-  it('applies correct subtitle margin when subtitle exists', () => {
+  it('wraps subtitle in a margin-top container', () => {
     const { container } = render(
       <IntroSection title="Title" subtitle="Subtitle" />
     );
-    const subtitleContainer = container.querySelector('div > div') as HTMLElement;
-    expect(subtitleContainer).toHaveStyle({
-      marginTop: '20px',
-    });
+    const subtitleContainer = container.querySelector('.mt-5') as HTMLElement;
+    expect(subtitleContainer).not.toBeNull();
+    expect(subtitleContainer).toHaveClass('mt-5');
   });
-}); 
+});

@@ -18,7 +18,8 @@ jobs:
     - name: Download artifacts from workflow run
       uses: actions/download-artifact@v4
       with:
-        name: rendered-video
+        pattern: rendered-video-*
+        merge-multiple: true
         path: ./videos
         github-token: ${{ secrets.GITHUB_TOKEN }}
         run-id: ${{ github.event.workflow_run.id }}
@@ -35,19 +36,13 @@ jobs:
         tag_name: video-${{ github.event.workflow_run.run_number }}
         name: "Video Render ${{ github.event.workflow_run.run_number }}"
         body: |
-          🎬 Video rendered automatically via GitHub Actions
-          
-          **Render Details:**
+          Rendered automatically via GitHub Actions.
+
           - Workflow Run: #${{ github.event.workflow_run.run_number }}
           - Triggered by: ${{ github.event.workflow_run.event }}
           - Completed at: ${{ github.event.workflow_run.updated_at }}
-          
-          **Video Files:**
-          - Format: MP4 (H.264)
-          - Resolution: 1920x1080
-          - Duration: 8 seconds
-          
-          Download the video files above for use in your projects.
+
+          Format: MP4 (H.264). See the artifact filename for the composition ID.
         draft: false
         prerelease: false
       env:
@@ -58,7 +53,5 @@ jobs:
       with:
         script: |
           const workflowRun = context.payload.workflow_run;
-          console.log(`✅ Video successfully uploaded to releases!`);
-          console.log(`📦 Release: Video Render ${workflowRun.run_number}`);
-          console.log(`🎬 Download: https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/video-${workflowRun.run_number}`);
-          console.log(`📁 Files: All MP4 files are now permanently stored in GitHub releases`); 
+          console.log(`Video uploaded to releases for run #${workflowRun.run_number}`);
+          console.log(`Tag: video-${workflowRun.run_number}`);

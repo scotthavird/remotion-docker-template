@@ -1,57 +1,54 @@
 ---
-description: GitHub Actions workflow development patterns, cross-workflow artifact access, and common troubleshooting solutions
+description: GitHub Actions patterns — composition_id workflow input, cross-workflow artifact handoff, common troubleshooting
 globs: .github/workflows/*.yml
 ---
 # GitHub Actions Workflow Development
 
-## Workflow Structure
-Three main workflows work together:
-1. **Build & Publish**: Creates Docker images
-2. **Render Video**: Generates videos with parameters
-3. **Upload to Releases**: Creates permanent releases
+## Workflow Layout
+Three workflows compose together:
+1. **Build & Publish** (`build-and-publish.yml`) — builds and pushes the Docker image to GHCR on main
+2. **Render Video** (`render-video.yml`) — manual dispatch with `composition_id` choice + per-composition string inputs
+3. **Upload to Releases** (`upload-to-releases.yml`) — attaches rendered MP4 to a tagged release
 
-## Key Patterns
+## Render Video inputs
+The workflow's `composition_id` input is a `type: choice` with options `HelloWorld | TransitionsDemo | CaptionsDemo`. Per-composition string inputs (title, subtitle, scene_one_text, srt_path, etc.) are all optional with sensible defaults; only the composition_id is required.
 
-### Docker Image Building
-- Uses `docker/build-push-action@v5` with caching
-- Publishes to GitHub Container Registry (`ghcr.io`)
-- Supports semantic versioning and branch tags
+## Docker run pattern
+```yaml
+- name: Run video render container
+  run: |
+    docker run --rm \
+      -v $(pwd)/output:/usr/src/app/out \
+      -v $(pwd)/public:/usr/src/app/public \
+      -e COMPOSITION_ID="${{ github.event.inputs.composition_id }}" \
+      -e TITLE="${{ github.event.inputs.title }}" \
+      -e SCENE_ONE_TEXT="${{ github.event.inputs.scene_one_text }}" \
+      -e SRT_PATH="${{ github.event.inputs.srt_path }}" \
+      ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
+```
 
-### Video Rendering
-- Manual trigger with customizable parameters
-- Uses Docker container for consistent rendering
-- Uploads artifacts for temporary storage
-- Creates releases for permanent storage
+The container reads `COMPOSITION_ID` and ignores irrelevant per-composition env vars.
 
-### Cross-Workflow Artifact Access
-When downloading artifacts from triggering workflows:
+## Cross-workflow artifact access
 ```yaml
 - uses: actions/download-artifact@v4
   with:
-    name: rendered-video
+    pattern: rendered-video-*
+    merge-multiple: true
     path: ./videos
     github-token: ${{ secrets.GITHUB_TOKEN }}
     run-id: ${{ github.event.workflow_run.id }}
 ```
 
-### Environment Variables
-Video parameters are passed as environment variables:
-```yaml
-- name: Run video render container
-  run: |
-    docker run --rm \
-      -e TITLE="${{ github.event.inputs.title || 'Hello World' }}" \
-      -e SUBTITLE="${{ github.event.inputs.subtitle || 'Welcome to Remotion' }}" \
-      ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
-```
+The `pattern` form lets the upload-to-releases workflow collect any composition's artifact since the artifact name now includes the composition ID.
 
 ## File References
-- [.github/workflows/build-and-publish.yml](mdc:.github/workflows/build-and-publish.yml) - Docker image workflow
-- [.github/workflows/render-video.yml](mdc:.github/workflows/render-video.yml) - Video rendering workflow
-- [.github/workflows/upload-to-releases.yml](mdc:.github/workflows/upload-to-releases.yml) - Release creation workflow
-- [docs/GITHUB_ACTIONS_SETUP.md](mdc:docs/GITHUB_ACTIONS_SETUP.md) - Complete setup guide
+- [.github/workflows/build-and-publish.yml](mdc:.github/workflows/build-and-publish.yml)
+- [.github/workflows/render-video.yml](mdc:.github/workflows/render-video.yml)
+- [.github/workflows/upload-to-releases.yml](mdc:.github/workflows/upload-to-releases.yml)
 
 ## Common Issues
-- **Artifact not found**: Ensure `github-token` and `run-id` are specified
-- **Permission denied**: Check workflow permissions (`contents: write`, `actions: read`)
-- **Docker image not found**: Verify build workflow completed successfully
+- **Artifact not found**: ensure both `github-token` and `run-id` are set on `download-artifact@v4`
+- **Permission denied creating release**: workflow needs `permissions: contents: write`
+- **Image not found**: confirm Build & Publish completed on main (look at the Actions tab)
+- **Composition not registered**: if a new composition was added, update the `composition_id` choice options in `render-video.yml`

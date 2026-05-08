@@ -1,56 +1,70 @@
 ---
-description: Remotion component development patterns, atomic design hierarchy, animation techniques, and testing strategies
+description: Remotion component patterns — atomic design, hooks, animations, Tailwind constraints, transitions, captions, and tests
 globs: src/components/**/*.tsx,src/components/**/*.ts
 ---
 # Remotion Component Development Patterns
 
 ## Component Structure
-Each component follows this structure:
-- `index.tsx` - Main component implementation
-- `types.ts` - TypeScript interfaces and prop definitions
-- `README.md` - Component documentation
-- `ComponentName.test.tsx` - Unit tests
+Each component lives in its own folder:
+- `index.tsx` — main implementation
+- `types.ts` — TypeScript prop interfaces
+- `README.md` — component documentation
+- `ComponentName.test.tsx` — Jest + React Testing Library tests
 
 ## Atomic Design Hierarchy
-- **Atoms**: Basic building blocks (AnimatedText, AnimatedCircle, ScrollingPage)
-- **Molecules**: Composite components (IntroSection, ContentSection, OutroSection)
-- **Organisms**: Main compositions (HelloWorldComposition)
+- **Atoms**: Basic building blocks (`AnimatedText`, `AnimatedCircle`, `ScrollingPage`)
+- **Molecules**: Composites (`IntroSection`, `ContentSection`, `OutroSection`, `CaptionPage`)
+- **Organisms**: Full compositions (`HelloWorldComposition`, `TransitionsDemo`, `CaptionsDemo`)
 
-## Remotion Hooks Usage
-Always import and use these Remotion hooks:
-```typescript
+## Remotion Hooks
+```ts
 import { useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
 ```
 
-## Component Props Pattern
-Use Zod schemas for visual editing support:
-```typescript
-import { z } from 'zod';
+For caption components, also `useDelayRender` to hold the render until async data resolves.
 
-export const ComponentSchema = z.object({
-  title: z.string().default('Hello World'),
-  subtitle: z.string().default('Welcome to Remotion'),
-});
+## Schemas
+Define schemas in `src/index.tsx` next to the `<Composition>` registration. Component prop interfaces should mark all schema-backed fields as **optional** so the FC type satisfies Remotion's `LooseComponentType<Record<string, unknown>>`. Provide defaults inside the component:
+
+```ts
+export const MyComp: React.FC<MyCompProps> = ({ title = 'Hello' }) => { ... };
 ```
 
 ## Animation Patterns
-- Use `spring()` for smooth animations
-- Use `interpolate()` for frame-based animations
-- Use `useCurrentFrame()` for timing
-- Use `useVideoConfig()` for video dimensions
+- `spring()` — organic motion
+- `interpolate()` — frame-driven property transitions (always set `extrapolateLeft`/`extrapolateRight`)
+- `useCurrentFrame()` — current frame number
+- `useVideoConfig()` — width/height/fps
 
-## Testing
-Mock Remotion hooks in tests:
-```typescript
-jest.mock('remotion', () => ({
-  useCurrentFrame: () => 0,
-  useVideoConfig: () => ({ width: 1920, height: 1080, fps: 30 }),
-  interpolate: (value: number) => value,
-  spring: (value: number) => value,
-}));
+## Tailwind v4
+`className` is allowed on container elements (see `IntroSection` for the canonical migration). Tailwind is wired via `@remotion/tailwind-v4` in both `remotion.config.ts` (Studio) and `render.mjs` (headless).
+
+**Forbidden Tailwind classes**: `transition-*`, `animate-*`, and any other CSS-time-based animation utility. Remotion renders frame-by-frame; CSS transitions don't apply. Animate via `useCurrentFrame()` + `interpolate()`/`spring()` instead. See `.claude/skills/remotion/rules/tailwind.md`.
+
+## Transitions (`@remotion/transitions`)
+```ts
+import { TransitionSeries, linearTiming } from '@remotion/transitions';
+import { fade } from '@remotion/transitions/fade';
+import { slide } from '@remotion/transitions/slide';
 ```
 
+`<TransitionSeries>` shortens total duration by the sum of transition durations because adjacent scenes overlap during transitions. Account for this in the `<Composition>` `durationInFrames` (see `TRANSITIONS_DEMO_DURATION_IN_FRAMES` in [TransitionsDemo/index.tsx](mdc:src/components/organisms/TransitionsDemo/index.tsx)).
+
+## Captions (`@remotion/captions`)
+```ts
+import { parseSrt, createTikTokStyleCaptions } from '@remotion/captions';
+import { staticFile, useDelayRender } from 'remotion';
+```
+
+Pattern: fetch the SRT inside `useEffect`, hold the render with `delayRender()`, parse on success and `continueRender()` (or `cancelRender()` on failure). Group tokens with `createTikTokStyleCaptions({ combineTokensWithinMilliseconds })`. Render each page in a `<Sequence>` whose `from` and `durationInFrames` are derived from `page.startMs`. See [CaptionsDemo/index.tsx](mdc:src/components/organisms/CaptionsDemo/index.tsx).
+
+## Testing
+Global mocks live in [src/setupTests.ts](mdc:src/setupTests.ts) and cover `useCurrentFrame`, `useVideoConfig`, `interpolate`, `spring`, `staticFile`, `useDelayRender`, `AbsoluteFill`, and `Sequence`. Per-test mocks for `@remotion/transitions` and `@remotion/captions` go inline in the test file (see [TransitionsDemo.test.tsx](mdc:src/components/organisms/TransitionsDemo/TransitionsDemo.test.tsx) and [CaptionsDemo.test.tsx](mdc:src/components/organisms/CaptionsDemo/CaptionsDemo.test.tsx)).
+
 ## File References
-- [src/components/atoms/AnimatedText/index.tsx](mdc:src/components/atoms/AnimatedText/index.tsx) - Text animation example
-- [src/components/atoms/AnimatedCircle/index.tsx](mdc:src/components/atoms/AnimatedCircle/index.tsx) - Circle animation example
-- [src/components/molecules/IntroSection/index.tsx](mdc:src/components/molecules/IntroSection/index.tsx) - Composite component example
+- [src/components/atoms/AnimatedText/index.tsx](mdc:src/components/atoms/AnimatedText/index.tsx)
+- [src/components/atoms/AnimatedCircle/index.tsx](mdc:src/components/atoms/AnimatedCircle/index.tsx)
+- [src/components/molecules/IntroSection/index.tsx](mdc:src/components/molecules/IntroSection/index.tsx) — Tailwind className migration reference
+- [src/components/molecules/CaptionPage/index.tsx](mdc:src/components/molecules/CaptionPage/index.tsx) — caption page with token highlighting
+- [src/components/organisms/TransitionsDemo/index.tsx](mdc:src/components/organisms/TransitionsDemo/index.tsx)
+- [src/components/organisms/CaptionsDemo/index.tsx](mdc:src/components/organisms/CaptionsDemo/index.tsx)

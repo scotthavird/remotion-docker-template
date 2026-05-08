@@ -1,66 +1,80 @@
 ---
-description: Docker container development patterns, Chrome dependencies for Remotion, security best practices, and common commands
+description: Docker patterns — Chrome deps for Remotion, multi-composition rendering via COMPOSITION_ID, public/ asset mounting
 globs: Dockerfile,docker-compose.yml,render.mjs
 ---
 # Docker Development Patterns
 
 ## Container Structure
-- **Base Image**: `node:22-bookworm-slim` with Chrome dependencies
-- **Working Directory**: `/usr/src/app`
-- **User**: Non-root user (`nodejs`) for security
-- **Output**: `/usr/src/app/out` with proper permissions
+- **Base**: `node:22-bookworm-slim` (per Remotion Docker docs; do NOT use Alpine)
+- **Working dir**: `/usr/src/app`
+- **User**: non-root `nodejs` (uid 1001) for security
+- **Output**: `/usr/src/app/out`, world-writable
 
 ## Chrome Dependencies
-Essential for Remotion rendering:
+Required for headless rendering:
 ```dockerfile
-RUN apt install -y \
+RUN apt-get install -y \
   libnss3 libdbus-1-3 libatk1.0-0 libgbm-dev \
   libasound2 libxrandr2 libxkbcommon-dev libxfixes3 \
   libxcomposite1 libxdamage1 libatk-bridge2.0-0 \
   libpango-1.0-0 libcairo2 libcups2
 ```
 
-## Development vs Production
-- **Development**: `docker-compose up remotion-dev` (hot reload)
-- **Production**: `docker-compose up remotion-render` (video generation)
+Use `npx remotion browser ensure` (NOT a pinned Chrome version — pinned APT versions get removed and break builds).
 
-## Environment Variables
-Video parameters are passed as environment variables:
+## Development vs Render
+- **Studio**: `docker compose up remotion-dev` (port 3000, hot reload, `public/` and `src/` mounted)
+- **Render**: `docker compose up remotion-render` (writes to `./out/`)
+
+## Composition Selection
+The render container picks a composition via the `COMPOSITION_ID` env var (default `HelloWorld`). Valid values: `HelloWorld`, `TransitionsDemo`, `CaptionsDemo`.
+
 ```bash
--e TITLE="Hello World" \
--e SUBTITLE="Welcome to Remotion" \
--e CONTENT_HEADER="Discover More" \
--e OUTRO_MESSAGE="Thank You!"
+# Pick composition + override one input
+COMPOSITION_ID=TransitionsDemo SCENE_ONE_TEXT="Hello" docker compose up remotion-render
+
+# Or pass directly to docker run
+docker run --rm \
+  -v $(pwd)/out:/usr/src/app/out \
+  -v $(pwd)/public:/usr/src/app/public \
+  -e COMPOSITION_ID=CaptionsDemo \
+  -e SRT_PATH=captions/my-file.srt \
+  ghcr.io/<owner>/<repo>:main
 ```
 
-## Volume Mounts
-- **Development**: Source code mounted for hot reload
-- **Production**: Output directory mounted for video files
+`render.mjs` validates `COMPOSITION_ID` and dispatches to a per-composition input-prop builder.
 
-## Security Best Practices
+## Volume Mounts
+- `./out` → `/usr/src/app/out` — rendered MP4s
+- `./public` → `/usr/src/app/public` — static assets (SRT files, images, fonts) — mounted on BOTH services so Studio and Render see the same files
+- Dev only: `./src`, `./package.json`, `./tsconfig.json`, `./remotion.config.ts` for hot reload
+
+## Tailwind in Containers
+Tailwind classes work in both Studio and headless render because `enableTailwind` is wired in both `remotion.config.ts` (read by Studio) and `render.mjs` (used by `bundle()`). If you add a build step that bypasses both, make sure to call `enableTailwind` on the webpack config.
+
+## Security
 - Non-root user execution
-- Minimal base image
-- Proper file permissions
-- No secrets in Dockerfile
+- Minimal image (no curl/wget/build tools in final stage beyond what apt deps need)
+- No secrets in Dockerfile — inject AWS keys via `.env` or workflow secrets at runtime
 
 ## File References
-- [Dockerfile](mdc:Dockerfile) - Production container definition
-- [docker-compose.yml](mdc:docker-compose.yml) - Development and render services
-- [render.mjs](mdc:render.mjs) - Video rendering script
-- [scripts/build-and-push.sh](mdc:scripts/build-and-push.sh) - Local build script
-- [scripts/test-local.sh](mdc:scripts/test-local.sh) - Local testing script
+- [Dockerfile](mdc:Dockerfile)
+- [docker-compose.yml](mdc:docker-compose.yml)
+- [render.mjs](mdc:render.mjs)
+- [scripts/build-and-push.sh](mdc:scripts/build-and-push.sh)
+- [scripts/test-local.sh](mdc:scripts/test-local.sh) — `./scripts/test-local.sh CaptionsDemo`
 
 ## Common Commands
 ```bash
-# Development
-docker-compose up remotion-dev
+# Studio
+docker compose up remotion-dev
 
-# Render video
-docker-compose up remotion-render
+# Render with composition override
+COMPOSITION_ID=TransitionsDemo docker compose up remotion-render
 
-# Build and push
-./scripts/build-and-push.sh v1.0.0
+# Build + push image
+./scripts/build-and-push.sh v1.1.0
 
-# Test locally
-./scripts/test-local.sh "Custom Title" "Custom Subtitle"
+# Local test render
+./scripts/test-local.sh TransitionsDemo
 ```

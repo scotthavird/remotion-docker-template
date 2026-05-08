@@ -3,27 +3,55 @@ name: Render Video
 on:
   workflow_dispatch:
     inputs:
+      composition_id:
+        description: 'Composition to render'
+        required: true
+        default: 'HelloWorld'
+        type: choice
+        options:
+          - HelloWorld
+          - TransitionsDemo
+          - CaptionsDemo
       title:
-        description: 'Video title'
+        description: 'HelloWorld: video title'
         required: false
         default: 'Hello World'
         type: string
       subtitle:
-        description: 'Video subtitle'
+        description: 'HelloWorld: video subtitle'
         required: false
         default: 'Welcome to Remotion'
         type: string
       content_header:
-        description: 'Content section header'
+        description: 'HelloWorld: content section header'
         required: false
         default: 'Discover More'
         type: string
       outro_message:
-        description: 'Outro message'
+        description: 'HelloWorld: outro message'
         required: false
         default: 'Thank You!'
         type: string
-
+      scene_one_text:
+        description: 'TransitionsDemo: scene 1 text'
+        required: false
+        default: 'Welcome'
+        type: string
+      scene_two_text:
+        description: 'TransitionsDemo: scene 2 text'
+        required: false
+        default: 'Built with Remotion'
+        type: string
+      scene_three_text:
+        description: 'TransitionsDemo: scene 3 text'
+        required: false
+        default: 'Render Anywhere'
+        type: string
+      srt_path:
+        description: 'CaptionsDemo: SRT path under public/'
+        required: false
+        default: 'captions/sample.srt'
+        type: string
 
 env:
   REGISTRY: ghcr.io
@@ -54,10 +82,16 @@ jobs:
       run: |
         docker run --rm \
           -v $(pwd)/output:/usr/src/app/out \
-          -e TITLE="${{ github.event.inputs.title || 'Hello World' }}" \
-          -e SUBTITLE="${{ github.event.inputs.subtitle || 'Welcome to Remotion' }}" \
-          -e CONTENT_HEADER="${{ github.event.inputs.content_header || 'Discover More' }}" \
-          -e OUTRO_MESSAGE="${{ github.event.inputs.outro_message || 'Thank You!' }}" \
+          -v $(pwd)/public:/usr/src/app/public \
+          -e COMPOSITION_ID="${{ github.event.inputs.composition_id }}" \
+          -e TITLE="${{ github.event.inputs.title }}" \
+          -e SUBTITLE="${{ github.event.inputs.subtitle }}" \
+          -e CONTENT_HEADER="${{ github.event.inputs.content_header }}" \
+          -e OUTRO_MESSAGE="${{ github.event.inputs.outro_message }}" \
+          -e SCENE_ONE_TEXT="${{ github.event.inputs.scene_one_text }}" \
+          -e SCENE_TWO_TEXT="${{ github.event.inputs.scene_two_text }}" \
+          -e SCENE_THREE_TEXT="${{ github.event.inputs.scene_three_text }}" \
+          -e SRT_PATH="${{ github.event.inputs.srt_path }}" \
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
 
     - name: List output files
@@ -66,7 +100,7 @@ jobs:
     - name: Upload video as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: rendered-video
+        name: rendered-video-${{ github.event.inputs.composition_id }}
         path: ./output/
         retention-days: 30
 
@@ -76,14 +110,20 @@ jobs:
       with:
         files: ./output/*.mp4
         tag_name: video-${{ github.run_number }}
-        name: "Video Render ${{ github.run_number }}"
+        name: "${{ github.event.inputs.composition_id }} #${{ github.run_number }}"
         body: |
-          Video rendered with parameters:
-          - Title: ${{ github.event.inputs.title || 'Hello World' }}
-          - Subtitle: ${{ github.event.inputs.subtitle || 'Welcome to Remotion' }}
-          - Content Header: ${{ github.event.inputs.content_header || 'Discover More' }}
-          - Outro Message: ${{ github.event.inputs.outro_message || 'Thank You!' }}
-          
+          Composition: **${{ github.event.inputs.composition_id }}**
+
+          Inputs:
+          - title: ${{ github.event.inputs.title }}
+          - subtitle: ${{ github.event.inputs.subtitle }}
+          - content_header: ${{ github.event.inputs.content_header }}
+          - outro_message: ${{ github.event.inputs.outro_message }}
+          - scene_one_text: ${{ github.event.inputs.scene_one_text }}
+          - scene_two_text: ${{ github.event.inputs.scene_two_text }}
+          - scene_three_text: ${{ github.event.inputs.scene_three_text }}
+          - srt_path: ${{ github.event.inputs.srt_path }}
+
           Rendered at: ${{ github.event.head_commit.timestamp }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

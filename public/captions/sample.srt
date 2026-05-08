@@ -1,0 +1,35 @@
+1
+00:00:00,000 --> 00:00:01,200
+Welcome to the captions demo
+
+2
+00:00:01,200 --> 00:00:02,400
+This is Remotion captions
+
+3
+00:00:02,400 --> 00:00:03,600
+Parsed from a real SRT file
+
+4
+00:00:03,600 --> 00:00:04,800
+Rendered TikTok style
+
+5
+00:00:04,800 --> 00:00:06,000
+Each word highlights when spoken
+
+6
+00:00:06,000 --> 00:00:07,200
+Drop in your own transcript
+
+7
+00:00:07,200 --> 00:00:08,400
+Replace this file in public
+
+8
+00:00:08,400 --> 00:00:09,600
+And it just works
+
+9
+00:00:09,600 --> 00:00:10,000
+Ship it

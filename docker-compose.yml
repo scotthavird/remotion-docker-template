@@ -4,20 +4,32 @@ services:
     container_name: remotion-render
     volumes:
       - ./out:/usr/src/app/out
+      - ./public:/usr/src/app/public
     environment:
       - NODE_ENV=production
+      - COMPOSITION_ID=${COMPOSITION_ID:-HelloWorld}
+      - TITLE=${TITLE:-}
+      - SUBTITLE=${SUBTITLE:-}
+      - CONTENT_HEADER=${CONTENT_HEADER:-}
+      - OUTRO_MESSAGE=${OUTRO_MESSAGE:-}
+      - SCENE_ONE_TEXT=${SCENE_ONE_TEXT:-}
+      - SCENE_TWO_TEXT=${SCENE_TWO_TEXT:-}
+      - SCENE_THREE_TEXT=${SCENE_THREE_TEXT:-}
+      - SRT_PATH=${SRT_PATH:-}
     command: ["node", "render.mjs"]
-  
+
   remotion-dev:
     build: .
     container_name: remotion-dev
     volumes:
       - ./src:/usr/src/app/src
+      - ./public:/usr/src/app/public
       - ./out:/usr/src/app/out
       - ./package.json:/usr/src/app/package.json
       - ./tsconfig.json:/usr/src/app/tsconfig.json
+      - ./remotion.config.ts:/usr/src/app/remotion.config.ts
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-    command: ["npm", "run", "dev"] 
+    command: ["npm", "run", "dev"]

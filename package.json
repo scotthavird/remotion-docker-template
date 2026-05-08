@@ -1,47 +1,64 @@
 {
   "name": "remotion-docker-template",
-  "version": "1.0.0",
-  "description": "Dockerized Remotion template with atomic design pattern",
+  "version": "1.1.0",
+  "description": "Dockerized Remotion template with Tailwind, transitions, captions, Player embed, Lambda deploy, and bundled Claude Code skills",
   "main": "src/index.tsx",
+  "sideEffects": [
+    "*.css"
+  ],
   "scripts": {
     "build": "remotion bundle",
     "dev": "remotion studio",
     "render": "node render.mjs",
-    "render:video": "remotion render HelloWorld out/hello-world.mp4",
+    "render:video": "node render.mjs",
     "start": "remotion studio",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "lambda:deploy": "./scripts/deploy-lambda.sh",
+    "skills:sync": "./scripts/sync-remotion-skills.sh"
   },
   "keywords": [
     "remotion",
     "docker",
     "template",
     "video",
-    "atomic-design"
+    "atomic-design",
+    "claude-code",
+    "skills",
+    "tailwind",
+    "captions",
+    "transitions"
   ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@remotion/bundler": "^4.0.234",
-    "@remotion/cli": "^4.0.234",
-    "@remotion/renderer": "^4.0.234",
-    "@remotion/zod-types": "^4.0.234",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "remotion": "^4.0.234",
-    "zod": "3.22.3"
+    "@remotion/bundler": "4.0.459",
+    "@remotion/captions": "4.0.459",
+    "@remotion/cli": "4.0.459",
+    "@remotion/media": "4.0.459",
+    "@remotion/player": "4.0.459",
+    "@remotion/renderer": "4.0.459",
+    "@remotion/transitions": "4.0.459",
+    "@remotion/zod-types": "4.0.459",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "4.0.459",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@remotion/lambda": "4.0.459",
+    "@remotion/tailwind-v4": "4.0.459",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
     "@types/jest": "^29.5.8",
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "tailwindcss": "^4.2.4",
     "ts-jest": "^29.4.0",
     "turbo": "^1.10.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.6.3"
   }
 }

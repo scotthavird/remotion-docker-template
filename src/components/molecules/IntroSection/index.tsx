@@ -12,36 +12,26 @@ export const IntroSection: React.FC<IntroSectionProps> = ({
   circleDelay = 0
 }) => {
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <AnimatedText 
-        text={title} 
+    <div className="relative w-full h-full flex flex-col justify-center items-center">
+      <AnimatedText
+        text={title}
         delay={titleDelay}
         fontSize={84}
         color={colors.text.inverse}
       />
-      
+
       {subtitle && (
-        <div style={{ marginTop: 20 }}>
-          <AnimatedText 
-            text={subtitle} 
+        <div className="mt-5">
+          <AnimatedText
+            text={subtitle}
             delay={subtitleDelay}
             fontSize={42}
             color={colors.neutral[100]}
           />
         </div>
       )}
-      
-      <AnimatedCircle 
+
+      <AnimatedCircle
         delay={circleDelay}
         duration={1.5}
         size={100}
@@ -50,4 +40,4 @@ export const IntroSection: React.FC<IntroSectionProps> = ({
       />
     </div>
   );
-}; 
+};

@@ -1,0 +1,31 @@
+---
+description: Vendored Remotion skills for Claude Code — location, refresh script, and how to extend with project-specific guidance
+alwaysApply: true
+---
+# Vendored Remotion Skills
+
+This template ships two Claude Code skills, both auto-loaded on `git clone` (no install command).
+
+## `.claude/skills/remotion/` (vendored)
+Mirrored from [remotion-dev/skills](https://github.com/remotion-dev/skills) `skills/remotion/` subtree. Contains:
+- `SKILL.md` — main "remotion-best-practices" entry
+- `rules/*.md` — 35 reference docs covering transitions, captions, audio, Tailwind, fonts, FFmpeg, light leaks, etc.
+- `rules/assets/` — supporting binary assets
+
+The vendored upstream commit SHA is recorded in `.claude/skills/remotion/SOURCE.md`.
+
+## `.claude/skills/remotion-docker-template/SKILL.md` (project-specific)
+Hand-written guidance for THIS template — composition map, atomic-design layout, Docker workflow, Tailwind rules, Lambda commands. Edit this file when project conventions change.
+
+## Refreshing from upstream
+```bash
+npm run skills:sync
+# or:
+./scripts/sync-remotion-skills.sh
+```
+
+The script clones `remotion-dev/skills`, replaces `.claude/skills/remotion/` with the latest `skills/remotion/` subtree, and updates `SOURCE.md` with the new SHA.
+
+## When to consult which skill
+- Remotion API patterns (transitions, captions, audio, FFmpeg, fonts) → `remotion-best-practices` (vendored)
+- This template's compositions, Docker pipeline, Tailwind setup → `remotion-docker-template`

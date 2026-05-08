@@ -1,39 +1,58 @@
 ---
-description: Overview of the Remotion Docker template project structure, including core files, component architecture, and development workflow
+description: Overview of the Remotion Docker template — core files, compositions, atomic design layout, vendored Claude skills, examples, and the Lambda deploy path
 alwaysApply: true
 ---
 # Remotion Docker Template Project Structure
 
-This is a Remotion-based video generation template with Docker containerization and GitHub Actions automation.
+Dockerized Remotion starter with three compositions, vendored Claude Code skills from `remotion-dev/skills`, Tailwind v4, and an alternative AWS Lambda deploy path.
 
 ## Core Files
-- [package.json](mdc:package.json) - Project dependencies and scripts
-- [Dockerfile](mdc:Dockerfile) - Production container with Chrome dependencies
-- [docker-compose.yml](mdc:docker-compose.yml) - Development and render services
-- [render.mjs](mdc:render.mjs) - Video rendering script with environment variables
+- [package.json](mdc:package.json) — pinned to Remotion 4.0.459 across all `@remotion/*` packages
+- [Dockerfile](mdc:Dockerfile) — `node:22-bookworm-slim` + Chrome deps; `npx remotion browser ensure`
+- [docker-compose.yml](mdc:docker-compose.yml) — `remotion-dev` (Studio) and `remotion-render` services
+- [render.mjs](mdc:render.mjs) — selects composition via `COMPOSITION_ID`, wires Tailwind via `enableTailwind`
+- [remotion.config.ts](mdc:remotion.config.ts) — Studio webpack override (Tailwind enabled)
+- [src/index.tsx](mdc:src/index.tsx) — registers `HelloWorld`, `TransitionsDemo`, `CaptionsDemo`
+- [src/index.css](mdc:src/index.css) — Tailwind v4 entrypoint (`@import 'tailwindcss';`)
+- [tsconfig.json](mdc:tsconfig.json) — TypeScript configuration
 
-## Remotion Configuration
-- [remotion.config.ts](mdc:remotion.config.ts) - Remotion webpack and video settings
-- [src/index.tsx](mdc:src/index.tsx) - Main composition registration with Zod schemas
-- [tsconfig.json](mdc:tsconfig.json) - TypeScript configuration
+## Compositions
+
+| ID | Resolution | Duration | Demonstrates |
+|---|---|---|---|
+| `HelloWorld` | 1920×1080 | 8s | atomic design, frame interpolation |
+| `TransitionsDemo` | 1920×1080 | 9s | `@remotion/transitions` (`fade`, `slide`) |
+| `CaptionsDemo` | 1080×1920 | 10s | `@remotion/captions` SRT parsing + TikTok-style pages |
 
 ## GitHub Actions Workflows
-- [.github/workflows/build-and-publish.yml](mdc:.github/workflows/build-and-publish.yml) - Docker image building and publishing
-- [.github/workflows/render-video.yml](mdc:.github/workflows/render-video.yml) - Manual video rendering with parameters
-- [.github/workflows/upload-to-releases.yml](mdc:.github/workflows/upload-to-releases.yml) - Automatic release creation
+- [.github/workflows/build-and-publish.yml](mdc:.github/workflows/build-and-publish.yml) — push image to GHCR on main
+- [.github/workflows/render-video.yml](mdc:.github/workflows/render-video.yml) — manual dispatch with `composition_id` choice + per-composition inputs
+- [.github/workflows/upload-to-releases.yml](mdc:.github/workflows/upload-to-releases.yml) — attach rendered MP4 to a release
 
 ## Component Architecture (Atomic Design)
-- [src/components/atoms/](mdc:src/components/atoms/) - Basic components (AnimatedText, AnimatedCircle, ScrollingPage)
-- [src/components/molecules/](mdc:src/components/molecules/) - Composite components (IntroSection, ContentSection, OutroSection)
-- [src/components/organisms/](mdc:src/components/organisms/) - Main composition (HelloWorldComposition)
+- [src/components/atoms/](mdc:src/components/atoms/) — `AnimatedText`, `AnimatedCircle`, `ScrollingPage`
+- [src/components/molecules/](mdc:src/components/molecules/) — `IntroSection`, `ContentSection`, `OutroSection`, `CaptionPage`
+- [src/components/organisms/](mdc:src/components/organisms/) — `HelloWorldComposition`, `TransitionsDemo`, `CaptionsDemo`
 
-## Scripts and Documentation
-- [scripts/](mdc:scripts/) - Helper scripts for building, testing, and setup
-- [docs/GITHUB_ACTIONS_SETUP.md](mdc:docs/GITHUB_ACTIONS_SETUP.md) - Comprehensive GitHub Actions guide
-- [README.md](mdc:README.md) - Quick start and usage instructions
+## Claude Code Skills (auto-loaded)
+- `.claude/skills/remotion/` — vendored from [remotion-dev/skills](https://github.com/remotion-dev/skills); 35 reference rules covering transitions, captions, audio, Tailwind, etc.
+- `.claude/skills/remotion-docker-template/SKILL.md` — project-specific guidance (compositions, Docker workflow, Tailwind rules)
+
+Refresh the vendored skill from upstream with: `npm run skills:sync` (runs `scripts/sync-remotion-skills.sh`).
+
+## Examples and Docs
+- [examples/player/](mdc:examples/player/) — standalone Vite-runnable `@remotion/player` embed demo
+- [docs/LAMBDA_DEPLOY.md](mdc:docs/LAMBDA_DEPLOY.md) — alternative deploy path on AWS Lambda
+
+## Scripts
+- [scripts/sync-remotion-skills.sh](mdc:scripts/sync-remotion-skills.sh) — re-vendor upstream skills
+- [scripts/deploy-lambda.sh](mdc:scripts/deploy-lambda.sh) — deploy + render on Lambda
+- [scripts/test-local.sh](mdc:scripts/test-local.sh) — local Docker render with `[composition_id]` first arg
+- [scripts/build-and-push.sh](mdc:scripts/build-and-push.sh) — local build + push to GHCR
 
 ## Development Workflow
-1. Local development: `docker-compose up remotion-dev`
-2. Video rendering: `docker-compose up remotion-render`
-3. GitHub Actions: Manual trigger via Actions tab
-4. Container registry: `ghcr.io/{username}/{repository}`
+1. Studio: `npm run dev` or `docker compose up remotion-dev`
+2. Local render: `COMPOSITION_ID=TransitionsDemo node render.mjs`
+3. Docker render: `COMPOSITION_ID=TransitionsDemo docker compose up remotion-render`
+4. Lambda render: `npm run lambda:deploy CaptionsDemo`
+5. CI render: Actions tab → "Render Video" → pick `composition_id`

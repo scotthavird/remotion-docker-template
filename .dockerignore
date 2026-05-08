@@ -9,5 +9,11 @@ README.md
 .env.test.local
 .env.production.local
 out
+test-output
 *.log
-.DS_Store 
+.DS_Store
+.cursor
+.claude
+docs
+examples
+HelloWorld.mp4
